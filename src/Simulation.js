@@ -21,6 +21,9 @@ var Simulation = /** @class */ (function () {
         this.totalRides = parseInt(metaSimulation[3]);
         this.bonus = parseInt(metaSimulation[4]);
         this.steps = parseInt(metaSimulation[5]);
+        for (var i = 0; i < this.totalVehicles; i++) {
+            this.cars.push(new Car_1.default(i));
+        }
     }
     Simulation.prototype.generateRides = function () {
         var tmp;
@@ -82,60 +85,11 @@ var Simulation = /** @class */ (function () {
         return finRow + finColumn;
     };
     Simulation.prototype.start = function () {
-        // RIDING LOOP
-        var cars = [];
-        for (var i = 0; i < this.totalVehicles; i++) {
-            cars.push(new Car_1.default(i));
-        }
         for (var step = 0; step < this.steps; ++step) {
             this.setRides(step);
             for (var j = 0; j < this.cars.length; ++j) {
                 var currentCar = this.cars[j];
-                if (currentCar.state !== CarState_1.default.FREE && currentCar.currentRide !== null) {
-                    var destinationRow = void 0;
-                    var destinationColumn = void 0;
-                    var currentRide = currentCar.currentRide;
-                    // CAR IS WAITING, CHECK IF IT CAN RIDE
-                    if (currentCar.state === CarState_1.default.WAITING && step >= currentRide.earliestStart) {
-                        currentCar.state = CarState_1.default.GOING_TO_DEPARTURE;
-                    }
-                    if (currentCar.state !== CarState_1.default.WAITING) {
-                        // FIND DESTINATION
-                        if (currentCar.state === CarState_1.default.GOING_TO_ARRIVAL) {
-                            destinationRow = currentRide.endRow;
-                            destinationColumn = currentRide.endColumn;
-                        }
-                        else {
-                            destinationRow = currentRide.startRow;
-                            destinationColumn = currentRide.startColumn;
-                        }
-                        if (destinationRow !== currentCar.row) {
-                            if (destinationRow - currentCar.row < 0) {
-                                currentCar.row--;
-                            }
-                            else {
-                                currentCar.row++;
-                            }
-                        }
-                        else if (destinationColumn !== currentCar.column) {
-                            if (destinationColumn - currentCar.column < 0) {
-                                currentCar.column--;
-                            }
-                            else {
-                                currentCar.column++;
-                            }
-                        }
-                        if (destinationColumn === currentCar.column && destinationRow === currentCar.row) {
-                            if (currentCar.state === CarState_1.default.GOING_TO_ARRIVAL) {
-                                currentRide.isFinished = true;
-                                currentCar.state = CarState_1.default.FREE;
-                            }
-                            else if (currentCar.state === CarState_1.default.GOING_TO_DEPARTURE) {
-                                currentCar.state = CarState_1.default.WAITING;
-                            }
-                        }
-                    }
-                }
+                currentCar.nextStep(step);
             }
         }
     };

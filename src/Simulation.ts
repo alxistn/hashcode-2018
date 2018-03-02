@@ -33,6 +33,10 @@ export default class Simulation {
         this.totalRides = parseInt(metaSimulation[3]);
         this.bonus = parseInt(metaSimulation[4]);
         this.steps = parseInt(metaSimulation[5]);
+
+        for (let i = 0; i < this.totalVehicles; i++) {
+            this.cars.push(new Car(i));
+        }
     }
 
     generateRides() {
@@ -98,62 +102,12 @@ export default class Simulation {
     }
 
     start() {
-        // RIDING LOOP
-
-        let cars = [];
-        for (let i = 0; i < this.totalVehicles; i++) {
-            cars.push(new Car(i));
-        }
-
         for (let step = 0; step < this.steps; ++step) {
             this.setRides(step);
             for (let j = 0; j < this.cars.length; ++j) {
                 let currentCar = this.cars[j];
 
-                if (currentCar.state !== CarState.FREE && currentCar.currentRide !== null) {
-                    let destinationRow;
-                    let destinationColumn;
-                    let currentRide = currentCar.currentRide;
-
-                    // CAR IS WAITING, CHECK IF IT CAN RIDE
-                    if (currentCar.state === CarState.WAITING && step >= currentRide.earliestStart) {
-                        currentCar.state = CarState.GOING_TO_DEPARTURE;
-                    }
-
-                    if (currentCar.state !== CarState.WAITING) {
-                        // FIND DESTINATION
-                        if (currentCar.state === CarState.GOING_TO_ARRIVAL) {
-                            destinationRow = currentRide.endRow;
-                            destinationColumn = currentRide.endColumn;
-                        } else {
-                            destinationRow = currentRide.startRow;
-                            destinationColumn = currentRide.startColumn;
-                        }
-
-                        if (destinationRow !== currentCar.row) {
-                            if (destinationRow - currentCar.row < 0) {
-                                currentCar.row--;
-                            } else {
-                                currentCar.row++;
-                            }
-                        } else if (destinationColumn !== currentCar.column) {
-                            if (destinationColumn - currentCar.column < 0) {
-                                currentCar.column--;
-                            } else {
-                                currentCar.column++;
-                            }
-                        }
-
-                        if (destinationColumn === currentCar.column && destinationRow === currentCar.row) {
-                            if (currentCar.state === CarState.GOING_TO_ARRIVAL) {
-                                currentRide.isFinished = true;
-                                currentCar.state = CarState.FREE;
-                            } else if (currentCar.state === CarState.GOING_TO_DEPARTURE) {
-                                currentCar.state = CarState.WAITING;
-                            }
-                        }
-                    }
-                }
+                currentCar.nextStep(step);
             }
         }
     }
