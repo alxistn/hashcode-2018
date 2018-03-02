@@ -30,4 +30,5 @@ export default class Car {
     column: number = 0;
     rides: Ride[] = [];
     currentRide: Ride;
+    distance: number = 0;
 }

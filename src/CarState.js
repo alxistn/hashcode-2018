@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var CarState;
 (function (CarState) {
     CarState[CarState["FREE"] = 0] = "FREE";
@@ -7,4 +7,4 @@ var CarState;
     CarState[CarState["WAITING"] = 2] = "WAITING";
     CarState[CarState["GOING_TO_ARRIVAL"] = 3] = "GOING_TO_ARRIVAL";
 })(CarState || (CarState = {}));
-exports["default"] = CarState;
+exports.default = CarState;

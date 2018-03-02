@@ -1,4 +1,4 @@
-declare function require(name: string);
+declare function require(name: string): any;
 const fs = require('fs');
 
 import Car from "./Car";
@@ -47,7 +47,7 @@ export default class Simulation {
         }
     }
 
-    setRides(step) {
+    setRides(step: number) {
         for (let i = this.rides.length - 1; i >= 0; i--) {
             if (this.rides[i].latestFinish < step) {
                 break;

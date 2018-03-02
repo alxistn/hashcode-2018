@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var Ride = /** @class */ (function () {
     function Ride(id, startRow, startColumn, endRow, endColumn, earliestStart, latestFinish) {
         this.isSet = false;
@@ -14,4 +14,4 @@ var Ride = /** @class */ (function () {
     }
     return Ride;
 }());
-exports["default"] = Ride;
+exports.default = Ride;

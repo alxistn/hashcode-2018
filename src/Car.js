@@ -10,6 +10,7 @@ var Car = /** @class */ (function () {
         this.row = 0;
         this.column = 0;
         this.rides = [];
+        this.distance = 0;
         this.id = id;
     }
     Car.prototype.setRide = function (ride) {
