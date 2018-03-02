@@ -1,5 +1,6 @@
 export default class Ride {
 
+    constructor(id: number, ...rideDescription);
     constructor(id: number, startRow: string, startColumn: string, endRow: string, endColumn: string, earliestStart: string, latestFinish: string) {
         this.id = id;
 

@@ -1,4 +1,5 @@
 "use strict";
+exports.__esModule = true;
 var CarState;
 (function (CarState) {
     CarState[CarState["FREE"] = 0] = "FREE";
@@ -6,6 +7,4 @@ var CarState;
     CarState[CarState["WAITING"] = 2] = "WAITING";
     CarState[CarState["GOING_TO_ARRIVAL"] = 3] = "GOING_TO_ARRIVAL";
 })(CarState || (CarState = {}));
-exports.__esModule = true;
 exports["default"] = CarState;
-//# sourceMappingURL=CarState.js.map

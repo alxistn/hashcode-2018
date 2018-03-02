@@ -1,16 +1,16 @@
 "use strict";
 exports.__esModule = true;
 var Ride = /** @class */ (function () {
-    function Ride(id, inputInstructions) {
+    function Ride(id, startRow, startColumn, endRow, endColumn, earliestStart, latestFinish) {
         this.isSet = false;
         this.isFinished = false;
         this.id = id;
-        this.startRow = parseInt(inputInstructions[0]);
-        this.startColumn = parseInt(inputInstructions[1]);
-        this.endRow = parseInt(inputInstructions[2]);
-        this.endColumn = parseInt(inputInstructions[3]);
-        this.earliestStart = parseInt(inputInstructions[4]);
-        this.latestFinish = parseInt(inputInstructions[5]);
+        this.startRow = parseInt(startRow);
+        this.startColumn = parseInt(startColumn);
+        this.endRow = parseInt(endRow);
+        this.endColumn = parseInt(endColumn);
+        this.earliestStart = parseInt(earliestStart);
+        this.latestFinish = parseInt(latestFinish);
     }
     return Ride;
 }());

@@ -1,9 +1,12 @@
 "use strict";
-var CarState_1 = require("./CarState");
-var Car = (function () {
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+var CarState_1 = __importDefault(require("./CarState"));
+var Car = /** @class */ (function () {
     function Car(id) {
-        this.readonly = id;
-        this.state = CarState_1["default"].FREE;
+        this.state = CarState_1.default.FREE;
         this.row = 0;
         this.column = 0;
         this.rides = [];
@@ -13,10 +16,10 @@ var Car = (function () {
         this.rides.push(ride);
         this.currentRide = ride;
         if (this.row === ride.startRow && this.column === ride.startColumn) {
-            this.state = CarState_1["default"].WAITING;
+            this.state = CarState_1.default.WAITING;
         }
         else {
-            this.state = CarState_1["default"].GOING_TO_DEPARTURE;
+            this.state = CarState_1.default.GOING_TO_DEPARTURE;
         }
     };
     Car.prototype.summarize = function () {
@@ -28,6 +31,4 @@ var Car = (function () {
     };
     return Car;
 }());
-exports.__esModule = true;
-exports["default"] = Car;
-//# sourceMappingURL=Car.js.map
+exports.default = Car;
