@@ -4,14 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 var CarState_1 = __importDefault(require("./CarState"));
+var Point_1 = __importDefault(require("./Point"));
 var Car = /** @class */ (function () {
     function Car(id) {
         this._state = CarState_1.default.FREE;
-        this._row = 0;
-        this._column = 0;
         this._rides = [];
         this.distance = 0;
         this.id = id;
+        this._position = new Point_1.default();
     }
     Object.defineProperty(Car.prototype, "state", {
         get: function () {
@@ -20,16 +20,9 @@ var Car = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Car.prototype, "row", {
+    Object.defineProperty(Car.prototype, "position", {
         get: function () {
-            return this._row;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Car.prototype, "column", {
-        get: function () {
-            return this._column;
+            return this._position;
         },
         enumerable: true,
         configurable: true
@@ -44,7 +37,7 @@ var Car = /** @class */ (function () {
     Car.prototype.setRide = function (ride) {
         this._rides.push(ride);
         this._currentRide = ride;
-        if (this.row === ride.startRow && this.column === ride.startColumn) {
+        if (this._position.isEqual(ride.startPosition)) {
             this._state = CarState_1.default.WAITING;
         }
         else {
@@ -53,8 +46,7 @@ var Car = /** @class */ (function () {
     };
     Car.prototype.nextStep = function (currentStep) {
         if (this._state !== CarState_1.default.FREE && this.currentRide !== null) {
-            var destinationRow = void 0;
-            var destinationColumn = void 0;
+            var destinationPoint = void 0;
             var currentRide = this.currentRide;
             // CAR IS WAITING, CHECK IF IT CAN RIDE
             if (this._state === CarState_1.default.WAITING && currentStep >= currentRide.earliestStart) {
@@ -63,30 +55,28 @@ var Car = /** @class */ (function () {
             if (this._state !== CarState_1.default.WAITING) {
                 // FIND DESTINATION
                 if (this._state === CarState_1.default.GOING_TO_ARRIVAL) {
-                    destinationRow = currentRide.endRow;
-                    destinationColumn = currentRide.endColumn;
+                    destinationPoint = currentRide.endPosition;
                 }
                 else {
-                    destinationRow = currentRide.startRow;
-                    destinationColumn = currentRide.startColumn;
+                    destinationPoint = currentRide.startPosition;
                 }
-                if (destinationRow !== this.row) {
-                    if (destinationRow - this.row < 0) {
-                        this._row--;
+                if (destinationPoint.y !== this._position.y) {
+                    if (destinationPoint.y - this._position.y < 0) {
+                        this._position.y--;
                     }
                     else {
-                        this._row++;
+                        this._position.y++;
                     }
                 }
-                else if (destinationColumn !== this.column) {
-                    if (destinationColumn - this.column < 0) {
-                        this._column--;
+                else if (destinationPoint.x !== this._position.x) {
+                    if (destinationPoint.x - this._position.x < 0) {
+                        this._position.x--;
                     }
                     else {
-                        this._column++;
+                        this._position.x++;
                     }
                 }
-                if (destinationColumn === this.column && destinationRow === this.row) {
+                if (this._position.isEqual(destinationPoint)) {
                     if (this._state === CarState_1.default.GOING_TO_ARRIVAL) {
                         currentRide.isFinished = true;
                         this._state = CarState_1.default.FREE;

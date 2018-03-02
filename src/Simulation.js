@@ -42,7 +42,7 @@ var Simulation = /** @class */ (function () {
             var filteredCars = this.cars.filter(function (c) { return c.state === CarState_1.default.FREE; });
             var bestCar = null;
             for (var j = 0; j < filteredCars.length; j++) {
-                filteredCars[j].distance = Simulation.calculateIteration(filteredCars[j].row, filteredCars[j].column, this.rides[i].startRow, this.rides[i].startColumn);
+                filteredCars[j].distance = filteredCars[j].position.distance(this.rides[i].startPosition);
                 if (bestCar === null || filteredCars[j].distance < bestCar.distance)
                     bestCar = filteredCars[j];
             }
@@ -60,29 +60,6 @@ var Simulation = /** @class */ (function () {
         for (var i = 0; i < this.cars.length; i++)
             file += this.cars[i].summarize() + "\n";
         fs.writeFileSync("output/" + this.fileName + ".ou", file);
-    };
-    Simulation.calculateIteration = function (startRow, startColumn, endRow, endColumn) {
-        var finRow;
-        var finColumn;
-        if (startRow < endRow) {
-            finRow = endRow - startRow;
-        }
-        else if (endRow < startRow) {
-            finRow = startRow - endRow;
-        }
-        else {
-            finRow = 0;
-        }
-        if (startColumn < endColumn) {
-            finColumn = endColumn - startColumn;
-        }
-        else if (endColumn < startColumn) {
-            finColumn = startColumn - endColumn;
-        }
-        else {
-            finColumn = 0;
-        }
-        return finRow + finColumn;
     };
     Simulation.prototype.start = function () {
         for (var step = 0; step < this.steps; ++step) {

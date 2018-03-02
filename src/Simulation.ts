@@ -3,6 +3,7 @@ const fs = require('fs');
 
 import Car from "./Car";
 import Ride from "./Ride";
+import Point from "./Point";
 
 import CarState from "./CarState";
 
@@ -60,7 +61,7 @@ export default class Simulation {
             let filteredCars = this.cars.filter(c => c.state === CarState.FREE);
             let bestCar = null;
             for (let j = 0; j < filteredCars.length; j++) {
-                filteredCars[j].distance = Simulation.calculateIteration(filteredCars[j].row, filteredCars[j].column, this.rides[i].startRow, this.rides[i].startColumn);
+                filteredCars[j].distance = filteredCars[j].position.distance(this.rides[i].startPosition);
                 if (bestCar === null || filteredCars[j].distance < bestCar.distance)
                     bestCar = filteredCars[j]
             }
@@ -79,26 +80,6 @@ export default class Simulation {
             file += this.cars[i].summarize() + "\n";
 
         fs.writeFileSync(`output/${this.fileName}.ou`, file);
-    }
-
-    static calculateIteration(startRow: number, startColumn:number, endRow: number, endColumn: number) {
-        let finRow;
-        let finColumn;
-        if (startRow < endRow) {
-            finRow = endRow - startRow;
-        } else if (endRow < startRow) {
-            finRow = startRow - endRow;
-        } else {
-            finRow = 0;
-        }
-        if (startColumn < endColumn) {
-            finColumn = endColumn - startColumn;
-        } else if (endColumn < startColumn) {
-            finColumn = startColumn - endColumn;
-        } else {
-            finColumn = 0;
-        }
-        return finRow + finColumn;
     }
 
     start() {
