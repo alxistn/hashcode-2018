@@ -1,5 +1,9 @@
-# hashcode-2018
+# Hashcode-2018
 
-___ARRETEZ VOUS TOUS, C'EST NOUS QU'ON VA GAGNER___
+**INTRO:** we scored 11,825,929 at the end of the given time to submit results to the judge system (best score: 49,776,211); we decided to push it further and create a working simulation of the problem
 
-npm install && node index.js
+### Problem Statement for the qualification round
+You will find the problem statement of the hashcode 2018 qualification round in the file: qualification_round.pdf
+
+### How to run the simulation
+npm install && npm start
