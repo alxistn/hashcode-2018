@@ -5,7 +5,7 @@ let fileNames = ["a_example", "b_should_be_easy", "c_no_hurry", "d_metropolis", 
 for (let i = 0 ; i < fileNames.length ; ++i) {
     let fileName = fileNames[i];
 
-    let data = fs.readFileSync(`./${fileName}.in`, "utf-8");
+    let data = fs.readFileSync(`./input/${fileName}.in`, "utf-8");
 
     let formated = data.split('\n');
 
@@ -22,6 +22,7 @@ for (let i = 0 ; i < fileNames.length ; ++i) {
     for (let i = 1; i < formated.length; i++) {
         let tmp = formated[i].split(' ');
 
+        console.log(tmp);
         if (tmp.length === 6) {
             rides.push({
                 id: i - 1,
