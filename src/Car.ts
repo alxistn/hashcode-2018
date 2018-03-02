@@ -2,10 +2,6 @@ import CarState from "./CarState";
 import Ride from "./Ride";
 
 export default class Car {
-    constructor(id: number) {
-        this.id = id;
-    }
-
     readonly id: number;
 
     private _state: CarState = CarState.FREE;
@@ -29,6 +25,10 @@ export default class Car {
 
     get currentRide() {
         return this._currentRide;
+    }
+
+    constructor(id: number) {
+        this.id = id;
     }
 
     setRide(ride: Ride) {
