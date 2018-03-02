@@ -1,22 +1,18 @@
-class Car {
-    // riding / waiting / riding4theride /
+import CarState from "./CarState";
+import Ride from "./Ride";
 
-    constructor(id) {
+export default class Car {
+    constructor(id: number) {
         this.id = id;
-        this.state = 'free';
-        this.row = 0;
-        this.column = 0;
-        this.rides = [];
-        this.currentRide = null;
     }
 
-    setRide(ride) {
+    setRide(ride: Ride) {
         this.rides.push(ride);
         this.currentRide = ride;
         if (this.row === ride.startRow && this.column === ride.startColumn) {
-            this.state = 'waiting';
+            this.state = CarState.WAITING;
         } else {
-            this.state = 'riding4theride';
+            this.state = CarState.GOING_TO_DEPARTURE;
         }
     }
 
@@ -27,4 +23,11 @@ class Car {
         });
         return this.rides.length + " " + ridesOrder;
     }
+
+    readonly id: number;
+    state: CarState = CarState.FREE;
+    row: number = 0;
+    column: number = 0;
+    rides: Ride[] = [];
+    currentRide: Ride;
 }

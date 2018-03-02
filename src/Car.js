@@ -1,21 +1,22 @@
+"use strict";
+var CarState_1 = require("./CarState");
 var Car = (function () {
-    // riding / waiting / riding4theride /
     function Car(id) {
-        this.id = id;
-        this.state = 'free';
+        this.readonly = id;
+        this.state = CarState_1["default"].FREE;
         this.row = 0;
         this.column = 0;
         this.rides = [];
-        this.currentRide = null;
+        this.id = id;
     }
     Car.prototype.setRide = function (ride) {
         this.rides.push(ride);
         this.currentRide = ride;
         if (this.row === ride.startRow && this.column === ride.startColumn) {
-            this.state = 'waiting';
+            this.state = CarState_1["default"].WAITING;
         }
         else {
-            this.state = 'riding4theride';
+            this.state = CarState_1["default"].GOING_TO_DEPARTURE;
         }
     };
     Car.prototype.summarize = function () {
@@ -27,4 +28,6 @@ var Car = (function () {
     };
     return Car;
 }());
+exports.__esModule = true;
+exports["default"] = Car;
 //# sourceMappingURL=Car.js.map
