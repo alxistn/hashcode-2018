@@ -1,16 +1,9 @@
 "use strict";
-var Ride = (function () {
+exports.__esModule = true;
+var Ride = /** @class */ (function () {
     function Ride(id, inputInstructions) {
-        this.readonly = id;
-        this.readonly = startRow;
-        this.readonly = startColumn;
-        this.readonly = endRow;
-        this.readonly = endColumn;
-        this.readonly = earliestStart;
-        this.readonly = latestFinish;
         this.isSet = false;
         this.isFinished = false;
-        console.log(inputInstructions);
         this.id = id;
         this.startRow = parseInt(inputInstructions[0]);
         this.startColumn = parseInt(inputInstructions[1]);
@@ -21,6 +14,4 @@ var Ride = (function () {
     }
     return Ride;
 }());
-exports.__esModule = true;
 exports["default"] = Ride;
-//# sourceMappingURL=Ride.js.map

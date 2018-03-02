@@ -1,11 +1,12 @@
 "use strict";
+exports.__esModule = true;
 var Ride_1 = require("./Ride");
 var fs = require('fs');
-var Simulation = (function () {
+var Simulation = /** @class */ (function () {
     function Simulation(fileName) {
         this.rides = []; // the list of rides for the simulation
-        this.data = fs.readFileSync("./input/" + fileName + ".in", "utf-8");
-        this.data = this.data.split('\n');
+        var fileContent = fs.readFileSync("./input/" + fileName + ".in", "utf-8");
+        this.data = fileContent.split('\n');
         var metaSimulation = this.data[0].split(' ');
         this.rows = parseInt(metaSimulation[0]);
         this.columns = parseInt(metaSimulation[1]);
@@ -16,6 +17,7 @@ var Simulation = (function () {
     }
     Simulation.prototype.generateRides = function () {
         var tmp;
+        console.log("generateRides");
         for (var i = 1, l = this.data.length; i < l; i++) {
             tmp = this.data[i].split(' ');
             if (tmp.length === 6) {
@@ -25,6 +27,4 @@ var Simulation = (function () {
     };
     return Simulation;
 }());
-exports.__esModule = true;
 exports["default"] = Simulation;
-//# sourceMappingURL=Simulation.js.map

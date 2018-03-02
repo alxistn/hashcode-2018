@@ -1,5 +1,16 @@
 export default class Ride {
 
+    constructor(id: number, startRow: string, startColumn: string, endRow: string, endColumn: string, earliestStart: string, latestFinish: string) {
+        this.id = id;
+
+        this.startRow = parseInt(startRow);
+        this.startColumn = parseInt(startColumn);
+        this.endRow = parseInt(endRow);
+        this.endColumn = parseInt(endColumn);
+        this.earliestStart = parseInt(earliestStart);
+        this.latestFinish = parseInt(latestFinish);
+    }
+
     readonly id: number;
     readonly startRow: number;
     readonly startColumn: number;
@@ -10,16 +21,4 @@ export default class Ride {
 
     isSet: boolean = false;
     isFinished: boolean = false;
-
-    constructor(id: number, inputInstructions: string[]) {
-        console.log(inputInstructions)
-        this.id = id;
-
-        this.startRow = parseInt(inputInstructions[0]);
-        this.startColumn = parseInt(inputInstructions[1]);
-        this.endRow = parseInt(inputInstructions[2]);
-        this.endColumn = parseInt(inputInstructions[3]);
-        this.earliestStart = parseInt(inputInstructions[4]);
-        this.latestFinish = parseInt(inputInstructions[5]);
-    }
 }

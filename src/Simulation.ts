@@ -1,3 +1,5 @@
+declare function require(name: string);
+
 import Ride from "./Ride";
 const fs = require('fs');
 
@@ -12,9 +14,9 @@ export default class Simulation {
     data: string[];  // the data input formatted
 
     constructor(fileName: string) {
-        this.data = fs.readFileSync(`./input/${fileName}.in`, "utf-8");
+        let fileContent = fs.readFileSync(`./input/${fileName}.in`, "utf-8");
 
-        this.data = this.data.split('\n');
+        this.data = fileContent.split('\n');
 
         let metaSimulation = this.data[0].split(' ');
 
@@ -29,11 +31,13 @@ export default class Simulation {
     generateRides() {
         let tmp;
 
+        console.log("generateRides");
+
         for (let i = 1, l = this.data.length; i < l; i++) {
             tmp = this.data[i].split(' ');
 
             if (tmp.length === 6) {
-                this.rides.push(new Ride(i - 1, tmp));
+                this.rides.push(new Ride(i - 1, ...tmp));
             }
         }
     }

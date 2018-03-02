@@ -1,10 +1,16 @@
 "use strict";
-var Simulation_1 = require("./src/Simulation");
+exports.__esModule = true;
+var Simulation_1 = require("./Simulation");
 var fileNames = ["a_example", "b_should_be_easy", "c_no_hurry", "d_metropolis", "e_high_bonus"];
 for (var i = 0; i < fileNames.length; ++i) {
     var simulation = new Simulation_1["default"](fileNames[i]);
     simulation.generateRides();
     console.log(simulation);
+    // let cars = [];
+    // for (let i = 0; i < totalVehicles; i++) {
+    //     cars.push(new Car(i));
+    // }
+    // output();
 }
 //
 // let fileNames = ["a_example", "b_should_be_easy", "c_no_hurry", "d_metropolis", "e_high_bonus"];
@@ -173,5 +179,4 @@ for (var i = 0; i < fileNames.length; ++i) {
 //         }
 //     }
 //     output();
-// } 
-//# sourceMappingURL=index.js.map
+// }
