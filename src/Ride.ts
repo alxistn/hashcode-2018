@@ -1,22 +1,24 @@
 import Point from "./Point";
 
 export default class Ride {
-    readonly id: number;
-    readonly startPosition: Point;
-    readonly endPosition: Point;
-    readonly earliestStart: number;
-    readonly latestFinish: number;
+    public readonly id: number;
+    public readonly startPosition: Point;
+    public readonly endPosition: Point;
+    public readonly earliestStart: number;
+    public readonly latestFinish: number;
 
-    isSet: boolean = false;
-    isFinished: boolean = false;
+    public isSet: boolean = false;
+    public isFinished: boolean = false;
 
     constructor(id: number, ...rideDescription: string[]);
-    constructor(id: number, startRow: string, startColumn: string, endRow: string, endColumn: string, earliestStart: string, latestFinish: string) {
+    constructor(id: number, startRow: string, startColumn: string,
+                endRow: string, endColumn: string, earliestStart: string, latestFinish: string) {
+
         this.id = id;
 
-        this.startPosition = new Point(parseInt(startColumn), parseInt(startRow));
-        this.endPosition = new Point(parseInt(endColumn), parseInt(endRow));
-        this.earliestStart = parseInt(earliestStart);
-        this.latestFinish = parseInt(latestFinish);
+        this.startPosition = new Point(parseInt(startColumn, 10), parseInt(startRow, 10));
+        this.endPosition = new Point(parseInt(endColumn, 10), parseInt(endRow, 10));
+        this.earliestStart = parseInt(earliestStart, 10);
+        this.latestFinish = parseInt(latestFinish, 10);
     }
 }

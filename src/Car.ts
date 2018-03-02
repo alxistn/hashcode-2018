@@ -1,15 +1,15 @@
 import CarState from "./CarState";
-import Ride from "./Ride";
 import Point from "./Point";
+import Ride from "./Ride";
 
 export default class Car {
-    readonly id: number;
+    public readonly id: number;
+    public distance: number = 0;
 
     private _state: CarState = CarState.FREE;
     private _position: Point;
     private _rides: Ride[] = [];
     private _currentRide: Ride;
-    distance: number = 0;
 
     get state() {
         return this._state;
@@ -28,7 +28,7 @@ export default class Car {
         this._position = new Point();
     }
 
-    setRide(ride: Ride) {
+    public setRide(ride: Ride) {
         this._rides.push(ride);
         this._currentRide = ride;
         if (this._position.isEqual(ride.startPosition)) {
@@ -38,22 +38,21 @@ export default class Car {
         }
     }
 
-    nextStep(currentStep: number) {
+    public nextStep(currentStep: number) {
         if (this._state !== CarState.FREE && this.currentRide !== null) {
             let destinationPoint;
-            let currentRide = this.currentRide;
 
             // CAR IS WAITING, CHECK IF IT CAN RIDE
-            if (this._state === CarState.WAITING && currentStep >= currentRide.earliestStart) {
+            if (this._state === CarState.WAITING && currentStep >= this.currentRide.earliestStart) {
                 this._state = CarState.GOING_TO_DEPARTURE;
             }
 
             if (this._state !== CarState.WAITING) {
                 // FIND DESTINATION
                 if (this._state === CarState.GOING_TO_ARRIVAL) {
-                    destinationPoint = currentRide.endPosition;
+                    destinationPoint = this.currentRide.endPosition;
                 } else {
-                    destinationPoint = currentRide.startPosition;
+                    destinationPoint = this.currentRide.startPosition;
                 }
 
                 if (destinationPoint.y !== this._position.y) {
@@ -72,7 +71,7 @@ export default class Car {
 
                 if (this._position.isEqual(destinationPoint)) {
                     if (this._state === CarState.GOING_TO_ARRIVAL) {
-                        currentRide.isFinished = true;
+                        this.currentRide.isFinished = true;
                         this._state = CarState.FREE;
                     } else if (this._state === CarState.GOING_TO_DEPARTURE) {
                         this._state = CarState.WAITING;
@@ -82,9 +81,9 @@ export default class Car {
         }
     }
 
-    summarize() {
+    public summarize() {
         let ridesOrder = "";
-        this._rides.filter(x => x.isFinished).map(x => {
+        this._rides.filter((x) => x.isFinished).map((x) => {
             ridesOrder += (x.id + " ");
         });
         return this._rides.length + " " + ridesOrder;

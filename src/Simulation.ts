@@ -1,50 +1,47 @@
-declare function require(name: string): any;
-const fs = require('fs');
+import * as fs from "fs";
 
 import Car from "./Car";
 import Ride from "./Ride";
-import Point from "./Point";
 
 import CarState from "./CarState";
 
 export default class Simulation {
-    fileName: string;
-    rows: number; // number of rows of the grid
-    columns: number; // number of columns of the grid
-    totalVehicles: number; // number of vehicles in the fleet
-    totalRides: number; // number of rides
-    bonus: number; // per-ride bonus
-    steps: number; // number of steps in the simulation
-    rides: Ride[] = []; // the list of rides for the simulation
-    cars: Car[] = [];
-    data: string[];  // the data input formatted
+    private fileName: string;
+    private rows: number; // number of rows of the grid
+    private columns: number; // number of columns of the grid
+    private totalVehicles: number; // number of vehicles in the fleet
+    private totalRides: number; // number of rides
+    private bonus: number; // per-ride bonus
+    private steps: number; // number of steps in the simulation
+    private rides: Ride[] = []; // the list of rides for the simulation
+    private cars: Car[] = [];
+    private data: string[];  // the data input formatted
 
     constructor(fileName: string) {
         this.fileName = fileName;
 
-        let fileContent = fs.readFileSync(`./input/${this.fileName}.in`, "utf-8");
+        const fileContent = fs.readFileSync(`./input/${this.fileName}.in`, "utf-8");
+        this.data = fileContent.split("\n");
 
-        this.data = fileContent.split('\n');
+        const metaSimulation = this.data[0].split(" ");
 
-        let metaSimulation = this.data[0].split(' ');
-
-        this.rows = parseInt(metaSimulation[0]);
-        this.columns = parseInt(metaSimulation[1]);
-        this.totalVehicles = parseInt(metaSimulation[2]);
-        this.totalRides = parseInt(metaSimulation[3]);
-        this.bonus = parseInt(metaSimulation[4]);
-        this.steps = parseInt(metaSimulation[5]);
+        this.rows = parseInt(metaSimulation[0], 10);
+        this.columns = parseInt(metaSimulation[1], 10);
+        this.totalVehicles = parseInt(metaSimulation[2], 10);
+        this.totalRides = parseInt(metaSimulation[3], 10);
+        this.bonus = parseInt(metaSimulation[4], 10);
+        this.steps = parseInt(metaSimulation[5], 10);
 
         for (let i = 0; i < this.totalVehicles; i++) {
             this.cars.push(new Car(i));
         }
     }
 
-    generateRides() {
+    public generateRides() {
         let tmp;
 
         for (let i = 1, l = this.data.length; i < l; i++) {
-            tmp = this.data[i].split(' ');
+            tmp = this.data[i].split(" ");
 
             if (tmp.length === 6) {
                 this.rides.push(new Ride(i - 1, ...tmp));
@@ -52,18 +49,19 @@ export default class Simulation {
         }
     }
 
-    setRides(step: number) {
+    public setRides(step: number) {
         for (let i = this.rides.length - 1; i >= 0; i--) {
             if (this.rides[i].latestFinish < step) {
                 break;
             }
 
-            let filteredCars = this.cars.filter(c => c.state === CarState.FREE);
-            let bestCar = null;
-            for (let j = 0; j < filteredCars.length; j++) {
-                filteredCars[j].distance = filteredCars[j].position.distance(this.rides[i].startPosition);
-                if (bestCar === null || filteredCars[j].distance < bestCar.distance)
-                    bestCar = filteredCars[j]
+            const filteredCars = this.cars.filter((c) => c.state === CarState.FREE);
+            let bestCar: Car | null = null;
+            for (const filteredCar of filteredCars) {
+                filteredCar.distance = filteredCar.position.distance(this.rides[i].startPosition);
+                if (bestCar === null || filteredCar.distance < bestCar.distance) {
+                    bestCar = filteredCar;
+                }
             }
             if (bestCar) {
                 bestCar.setRide(this.rides[i]);
@@ -74,21 +72,20 @@ export default class Simulation {
         }
     }
 
-    output() {
+    public output() {
         let file = "";
-        for (let i = 0; i < this.cars.length; i++)
-            file += this.cars[i].summarize() + "\n";
+        for (const car of this.cars) {
+            file += car.summarize() + "\n";
+        }
 
         fs.writeFileSync(`output/${this.fileName}.ou`, file);
     }
 
-    start() {
+    public start() {
         for (let step = 0; step < this.steps; ++step) {
             this.setRides(step);
-            for (let j = 0; j < this.cars.length; ++j) {
-                let currentCar = this.cars[j];
-
-                currentCar.nextStep(step);
+            for (const car of this.cars) {
+                car.nextStep(step);
             }
         }
     }

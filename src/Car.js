@@ -7,9 +7,9 @@ var CarState_1 = __importDefault(require("./CarState"));
 var Point_1 = __importDefault(require("./Point"));
 var Car = /** @class */ (function () {
     function Car(id) {
+        this.distance = 0;
         this._state = CarState_1.default.FREE;
         this._rides = [];
-        this.distance = 0;
         this.id = id;
         this._position = new Point_1.default();
     }
@@ -47,18 +47,17 @@ var Car = /** @class */ (function () {
     Car.prototype.nextStep = function (currentStep) {
         if (this._state !== CarState_1.default.FREE && this.currentRide !== null) {
             var destinationPoint = void 0;
-            var currentRide = this.currentRide;
             // CAR IS WAITING, CHECK IF IT CAN RIDE
-            if (this._state === CarState_1.default.WAITING && currentStep >= currentRide.earliestStart) {
+            if (this._state === CarState_1.default.WAITING && currentStep >= this.currentRide.earliestStart) {
                 this._state = CarState_1.default.GOING_TO_DEPARTURE;
             }
             if (this._state !== CarState_1.default.WAITING) {
                 // FIND DESTINATION
                 if (this._state === CarState_1.default.GOING_TO_ARRIVAL) {
-                    destinationPoint = currentRide.endPosition;
+                    destinationPoint = this.currentRide.endPosition;
                 }
                 else {
-                    destinationPoint = currentRide.startPosition;
+                    destinationPoint = this.currentRide.startPosition;
                 }
                 if (destinationPoint.y !== this._position.y) {
                     if (destinationPoint.y - this._position.y < 0) {
@@ -78,7 +77,7 @@ var Car = /** @class */ (function () {
                 }
                 if (this._position.isEqual(destinationPoint)) {
                     if (this._state === CarState_1.default.GOING_TO_ARRIVAL) {
-                        currentRide.isFinished = true;
+                        this.currentRide.isFinished = true;
                         this._state = CarState_1.default.FREE;
                     }
                     else if (this._state === CarState_1.default.GOING_TO_DEPARTURE) {

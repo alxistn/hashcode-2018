@@ -9,10 +9,10 @@ var Ride = /** @class */ (function () {
         this.isSet = false;
         this.isFinished = false;
         this.id = id;
-        this.startPosition = new Point_1.default(parseInt(startColumn), parseInt(startRow));
-        this.endPosition = new Point_1.default(parseInt(endColumn), parseInt(endRow));
-        this.earliestStart = parseInt(earliestStart);
-        this.latestFinish = parseInt(latestFinish);
+        this.startPosition = new Point_1.default(parseInt(startColumn, 10), parseInt(startRow, 10));
+        this.endPosition = new Point_1.default(parseInt(endColumn, 10), parseInt(endRow, 10));
+        this.earliestStart = parseInt(earliestStart, 10);
+        this.latestFinish = parseInt(latestFinish, 10);
     }
     return Ride;
 }());
