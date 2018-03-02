@@ -1,4 +1,4 @@
-var Car = /** @class */ (function () {
+var Car = (function () {
     // riding / waiting / riding4theride /
     function Car(id) {
         this.id = id;
@@ -27,3 +27,4 @@ var Car = /** @class */ (function () {
     };
     return Car;
 }());
+//# sourceMappingURL=Car.js.map
