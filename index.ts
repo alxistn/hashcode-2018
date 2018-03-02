@@ -1,3 +1,6 @@
+import Car from "./Car";
+import Ride from "./Ride";
+
 const fs = require('fs');
 
 
@@ -18,23 +21,12 @@ for (let i = 0 ; i < fileNames.length ; ++i) {
     let bonus = parseInt(mapInfo[4]); // per-ride bonus
     let steps = parseInt(mapInfo[5]); // number of steps in the simulation
 
-    let rides = [];
+    let rides: Ride[] = [];
     for (let i = 1; i < formated.length; i++) {
         let tmp = formated[i].split(' ');
 
-        console.log(tmp);
         if (tmp.length === 6) {
-            rides.push({
-                id: i - 1,
-                startRow: parseInt(tmp[0]),
-                startColumn: parseInt(tmp[1]),
-                endRow: parseInt(tmp[2]),
-                endColumn: parseInt(tmp[3]),
-                earliestStart: parseInt(tmp[4]),
-                latestFinish: parseInt(tmp[5]),
-                isSet: false,
-                isFinished: false
-            });
+            rides.push(new Ride(i - 1, tmp));
         }
     }
 
@@ -46,7 +38,7 @@ for (let i = 0 ; i < fileNames.length ; ++i) {
         });
     }
 
-    let cars = [];
+    let cars: Car[] = [];
     for (let i = 0; i < totalVehicles; i++) {
         cars.push(new Car(i));
     }
@@ -102,7 +94,7 @@ for (let i = 0 ; i < fileNames.length ; ++i) {
             file += cars[i].summarize() + "\n";
 
         console.log(fileName);
-        fs.writeFileSync(`${fileName}.ou`, file);
+        fs.writeFileSync(`output/${fileName}.ou`, file);
     }
 
     function calculateIteration({startRow, startColumn, endRow, endColumn}) {
