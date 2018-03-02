@@ -33,9 +33,8 @@ var Simulation = /** @class */ (function () {
         }
     }
     Simulation.prototype.generateRides = function () {
-        var tmp;
         for (var i = 1, l = this.data.length; i < l; i++) {
-            tmp = this.data[i].split(" ");
+            var tmp = this.data[i].split(" ");
             if (tmp.length === 6) {
                 this.rides.push(new (Ride_1.default.bind.apply(Ride_1.default, [void 0, i - 1].concat(tmp)))());
             }

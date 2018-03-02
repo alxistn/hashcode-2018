@@ -38,10 +38,8 @@ export default class Simulation {
     }
 
     public generateRides() {
-        let tmp;
-
         for (let i = 1, l = this.data.length; i < l; i++) {
-            tmp = this.data[i].split(" ");
+            const tmp = this.data[i].split(" ");
 
             if (tmp.length === 6) {
                 this.rides.push(new Ride(i - 1, ...tmp));
