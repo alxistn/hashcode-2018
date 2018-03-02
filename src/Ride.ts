@@ -1,9 +1,9 @@
+import Point from "./Point";
+
 export default class Ride {
     readonly id: number;
-    readonly startRow: number;
-    readonly startColumn: number;
-    readonly endRow: number;
-    readonly endColumn: number;
+    readonly startPosition: Point;
+    readonly endPosition: Point;
     readonly earliestStart: number;
     readonly latestFinish: number;
 
@@ -14,10 +14,8 @@ export default class Ride {
     constructor(id: number, startRow: string, startColumn: string, endRow: string, endColumn: string, earliestStart: string, latestFinish: string) {
         this.id = id;
 
-        this.startRow = parseInt(startRow);
-        this.startColumn = parseInt(startColumn);
-        this.endRow = parseInt(endRow);
-        this.endColumn = parseInt(endColumn);
+        this.startPosition = new Point(parseInt(startColumn), parseInt(startRow));
+        this.endPosition = new Point(parseInt(endColumn), parseInt(endRow));
         this.earliestStart = parseInt(earliestStart);
         this.latestFinish = parseInt(latestFinish);
     }

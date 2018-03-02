@@ -1,12 +1,12 @@
 import CarState from "./CarState";
 import Ride from "./Ride";
+import Point from "./Point";
 
 export default class Car {
     readonly id: number;
 
     private _state: CarState = CarState.FREE;
-    private _row: number = 0;
-    private _column: number = 0;
+    private _position: Point;
     private _rides: Ride[] = [];
     private _currentRide: Ride;
     distance: number = 0;
@@ -15,12 +15,8 @@ export default class Car {
         return this._state;
     }
 
-    get row() {
-        return this._row;
-    }
-
-    get column() {
-        return this._column;
+    get position() {
+        return this._position;
     }
 
     get currentRide() {
@@ -29,12 +25,13 @@ export default class Car {
 
     constructor(id: number) {
         this.id = id;
+        this._position = new Point();
     }
 
     setRide(ride: Ride) {
         this._rides.push(ride);
         this._currentRide = ride;
-        if (this.row === ride.startRow && this.column === ride.startColumn) {
+        if (this._position.isEqual(ride.startPosition)) {
             this._state = CarState.WAITING;
         } else {
             this._state = CarState.GOING_TO_DEPARTURE;
@@ -43,8 +40,7 @@ export default class Car {
 
     nextStep(currentStep: number) {
         if (this._state !== CarState.FREE && this.currentRide !== null) {
-            let destinationRow;
-            let destinationColumn;
+            let destinationPoint;
             let currentRide = this.currentRide;
 
             // CAR IS WAITING, CHECK IF IT CAN RIDE
@@ -55,28 +51,26 @@ export default class Car {
             if (this._state !== CarState.WAITING) {
                 // FIND DESTINATION
                 if (this._state === CarState.GOING_TO_ARRIVAL) {
-                    destinationRow = currentRide.endRow;
-                    destinationColumn = currentRide.endColumn;
+                    destinationPoint = currentRide.endPosition;
                 } else {
-                    destinationRow = currentRide.startRow;
-                    destinationColumn = currentRide.startColumn;
+                    destinationPoint = currentRide.startPosition;
                 }
 
-                if (destinationRow !== this.row) {
-                    if (destinationRow - this.row < 0) {
-                        this._row--;
+                if (destinationPoint.y !== this._position.y) {
+                    if (destinationPoint.y - this._position.y < 0) {
+                        this._position.y--;
                     } else {
-                        this._row++;
+                        this._position.y++;
                     }
-                } else if (destinationColumn !== this.column) {
-                    if (destinationColumn - this.column < 0) {
-                        this._column--;
+                } else if (destinationPoint.x !== this._position.x) {
+                    if (destinationPoint.x - this._position.x < 0) {
+                        this._position.x--;
                     } else {
-                        this._column++;
+                        this._position.x++;
                     }
                 }
 
-                if (destinationColumn === this.column && destinationRow === this.row) {
+                if (this._position.isEqual(destinationPoint)) {
                     if (this._state === CarState.GOING_TO_ARRIVAL) {
                         currentRide.isFinished = true;
                         this._state = CarState.FREE;
