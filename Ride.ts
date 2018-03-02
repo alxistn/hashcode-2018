@@ -11,12 +11,13 @@ export default class Ride {
     }
 
     readonly id: number;
-    startRow: number;
-    startColumn: number;
-    endRow: number;
-    endColumn: number;
-    earliestStart: number;
-    latestFinish: number;
+    readonly startRow: number;
+    readonly startColumn: number;
+    readonly endRow: number;
+    readonly endColumn: number;
+    readonly earliestStart: number;
+    readonly latestFinish: number;
+
     isSet: boolean = false;
     isFinished: boolean = false;
 }
