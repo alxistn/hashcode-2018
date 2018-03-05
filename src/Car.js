@@ -6,59 +6,33 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var CarState_1 = __importDefault(require("./CarState"));
 var Point_1 = __importDefault(require("./Point"));
 var Car = /** @class */ (function () {
-    function Car(id) {
-        this.distance = 0;
+    function Car(id, rideBonus) {
+        this._currentStep = 0;
         this._state = CarState_1.default.FREE;
         this._rides = [];
         this._currentRide = null;
         this.id = id;
+        this._rideBonus = rideBonus;
         this._position = new Point_1.default();
     }
-    Object.defineProperty(Car.prototype, "state", {
-        get: function () {
-            return this._state;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Car.prototype, "position", {
-        get: function () {
-            return this._position;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Car.prototype, "currentRide", {
-        get: function () {
-            return this._currentRide;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Car.prototype.setRide = function (ride) {
-        this._rides.push(ride);
-        this._currentRide = ride;
-        if (this._position.isEqual(ride.startPosition)) {
-            this._state = CarState_1.default.WAITING;
+    Car.prototype.nextStep = function (currentStep, availableRides) {
+        this._currentStep = currentStep;
+        if (this._state === CarState_1.default.FREE) {
+            this.findBestRide(availableRides);
         }
-        else {
-            this._state = CarState_1.default.GOING_TO_DEPARTURE;
-        }
-    };
-    Car.prototype.nextStep = function (currentStep) {
-        if (this._state !== CarState_1.default.FREE && this.currentRide !== null) {
+        if (this._state !== CarState_1.default.FREE && this._currentRide !== null) {
             var destinationPoint = void 0;
             // CAR IS WAITING, CHECK IF IT CAN RIDE
-            if (this._state === CarState_1.default.WAITING && currentStep >= this.currentRide.earliestStart) {
+            if (this._state === CarState_1.default.WAITING && this._currentStep >= this._currentRide.earliestStart) {
                 this._state = CarState_1.default.GOING_TO_ARRIVAL;
             }
             if (this._state !== CarState_1.default.WAITING) {
                 // FIND DESTINATION
                 if (this._state === CarState_1.default.GOING_TO_ARRIVAL) {
-                    destinationPoint = this.currentRide.endPosition;
+                    destinationPoint = this._currentRide.endPosition;
                 }
                 else {
-                    destinationPoint = this.currentRide.startPosition;
+                    destinationPoint = this._currentRide.startPosition;
                 }
                 if (destinationPoint.y !== this._position.y) {
                     if (destinationPoint.y - this._position.y < 0) {
@@ -78,7 +52,7 @@ var Car = /** @class */ (function () {
                 }
                 if (this._position.isEqual(destinationPoint)) {
                     if (this._state === CarState_1.default.GOING_TO_ARRIVAL) {
-                        this.currentRide.isFinished = true;
+                        this._currentRide.isFinished = true;
                         this._state = CarState_1.default.FREE;
                     }
                     else if (this._state === CarState_1.default.GOING_TO_DEPARTURE) {
@@ -95,6 +69,55 @@ var Car = /** @class */ (function () {
             ridesOrder += (ride.id + " ");
         });
         return finishedRides.length + " " + ridesOrder;
+    };
+    Car.prototype.findBestRide = function (availableRides) {
+        var bestRide = availableRides[0];
+        var bestNumberOfPoints = 0;
+        var bestRideIndex = -1;
+        for (var i = availableRides.length - 1; i >= 0; --i) {
+            var ride = availableRides[i];
+            if (this._currentStep >= ride.latestFinish) {
+                availableRides.splice(i, 1);
+                bestRideIndex--;
+                continue;
+            }
+            var numberOfPoints = this.calculatePointsPerStep(ride);
+            if (numberOfPoints > bestNumberOfPoints) {
+                bestNumberOfPoints = numberOfPoints;
+                bestRide = ride;
+                bestRideIndex = i;
+            }
+        }
+        if (bestRideIndex >= 0) {
+            availableRides.splice(availableRides.indexOf(bestRide), 1);
+            this.setRide(bestRide);
+        }
+    };
+    Car.prototype.setRide = function (ride) {
+        this._rides.push(ride);
+        this._currentRide = ride;
+        if (this._position.isEqual(ride.startPosition)) {
+            this._state = CarState_1.default.WAITING;
+        }
+        else {
+            this._state = CarState_1.default.GOING_TO_DEPARTURE;
+        }
+    };
+    Car.prototype.calculatePointsPerStep = function (ride) {
+        var carDistance = this._position.distance(ride.startPosition);
+        var rideDistance = ride.startPosition.distance(ride.endPosition);
+        var stepsUntilRideBegin = (ride.earliestStart - this._currentStep > 0) ?
+            ride.earliestStart - this._currentStep :
+            0;
+        var totalSteps = carDistance + rideDistance + stepsUntilRideBegin;
+        var totalPoints = rideDistance;
+        if (this._currentStep + totalSteps >= ride.latestFinish) {
+            return 0;
+        }
+        if (this._currentStep + carDistance <= ride.earliestStart) {
+            totalPoints += this._rideBonus;
+        }
+        return totalPoints / totalSteps;
     };
     return Car;
 }());

@@ -4,55 +4,42 @@ import Ride from "./Ride";
 
 export default class Car {
     public readonly id: number;
-    public distance: number = 0;
+
+    private _rideBonus: number;
+    private _currentStep: number = 0;
 
     private _state: CarState = CarState.FREE;
     private _position: Point;
     private _rides: Ride[] = [];
     private _currentRide: Ride | null = null;
 
-    get state() {
-        return this._state;
-    }
-
-    get position() {
-        return this._position;
-    }
-
-    get currentRide() {
-        return this._currentRide;
-    }
-
-    constructor(id: number) {
+    constructor(id: number, rideBonus: number) {
         this.id = id;
+        this._rideBonus = rideBonus;
         this._position = new Point();
     }
 
-    public setRide(ride: Ride) {
-        this._rides.push(ride);
-        this._currentRide = ride;
-        if (this._position.isEqual(ride.startPosition)) {
-            this._state = CarState.WAITING;
-        } else {
-            this._state = CarState.GOING_TO_DEPARTURE;
-        }
-    }
+    public nextStep(currentStep: number, availableRides: Ride[]) {
+        this._currentStep = currentStep;
 
-    public nextStep(currentStep: number) {
-        if (this._state !== CarState.FREE && this.currentRide !== null) {
+        if (this._state === CarState.FREE) {
+            this.findBestRide(availableRides);
+        }
+
+        if (this._state !== CarState.FREE && this._currentRide !== null) {
             let destinationPoint;
 
             // CAR IS WAITING, CHECK IF IT CAN RIDE
-            if (this._state === CarState.WAITING && currentStep >= this.currentRide.earliestStart) {
+            if (this._state === CarState.WAITING && this._currentStep >= this._currentRide.earliestStart) {
                 this._state = CarState.GOING_TO_ARRIVAL;
             }
 
             if (this._state !== CarState.WAITING) {
                 // FIND DESTINATION
                 if (this._state === CarState.GOING_TO_ARRIVAL) {
-                    destinationPoint = this.currentRide.endPosition;
+                    destinationPoint = this._currentRide.endPosition;
                 } else {
-                    destinationPoint = this.currentRide.startPosition;
+                    destinationPoint = this._currentRide.startPosition;
                 }
 
                 if (destinationPoint.y !== this._position.y) {
@@ -71,7 +58,7 @@ export default class Car {
 
                 if (this._position.isEqual(destinationPoint)) {
                     if (this._state === CarState.GOING_TO_ARRIVAL) {
-                        this.currentRide.isFinished = true;
+                        this._currentRide.isFinished = true;
                         this._state = CarState.FREE;
                     } else if (this._state === CarState.GOING_TO_DEPARTURE) {
                         this._state = CarState.WAITING;
@@ -90,5 +77,63 @@ export default class Car {
         });
 
         return finishedRides.length + " " + ridesOrder;
+    }
+
+    private findBestRide(availableRides: Ride[]) {
+        let bestRide: Ride = availableRides[0];
+        let bestNumberOfPoints: number = 0;
+        let bestRideIndex: number = -1;
+
+        for (let i = availableRides.length - 1 ; i >= 0 ; --i) {
+            const ride = availableRides[i];
+
+            if (this._currentStep >= ride.latestFinish) {
+                availableRides.splice(i, 1);
+                bestRideIndex--;
+                continue;
+            }
+
+            const numberOfPoints = this.calculatePointsPerStep(ride);
+            if (numberOfPoints > bestNumberOfPoints) {
+                bestNumberOfPoints = numberOfPoints;
+                bestRide = ride;
+                bestRideIndex = i;
+            }
+        }
+
+        if (bestRideIndex >= 0) {
+            availableRides.splice(availableRides.indexOf(bestRide), 1);
+            this.setRide(bestRide);
+        }
+    }
+
+    private setRide(ride: Ride) {
+        this._rides.push(ride);
+        this._currentRide = ride;
+        if (this._position.isEqual(ride.startPosition)) {
+            this._state = CarState.WAITING;
+        } else {
+            this._state = CarState.GOING_TO_DEPARTURE;
+        }
+    }
+
+    private calculatePointsPerStep(ride: Ride): number {
+        const carDistance: number = this._position.distance(ride.startPosition);
+        const rideDistance: number = ride.startPosition.distance(ride.endPosition);
+        const stepsUntilRideBegin: number = (ride.earliestStart - this._currentStep > 0) ?
+            ride.earliestStart - this._currentStep :
+            0;
+        const totalSteps: number = carDistance + rideDistance + stepsUntilRideBegin;
+        let totalPoints: number = rideDistance;
+
+        if (this._currentStep + totalSteps >= ride.latestFinish) {
+            return 0;
+        }
+
+        if (this._currentStep + carDistance <= ride.earliestStart) {
+            totalPoints += this._rideBonus;
+        }
+
+        return totalPoints / totalSteps;
     }
 }

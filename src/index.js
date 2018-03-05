@@ -8,7 +8,5 @@ var fileNames = ["a_example", "b_should_be_easy", "c_no_hurry", "d_metropolis", 
 for (var _i = 0, fileNames_1 = fileNames; _i < fileNames_1.length; _i++) {
     var fileName = fileNames_1[_i];
     var simulation = new Simulation_1.default(fileName);
-    simulation.generateRides();
     simulation.start();
-    simulation.output();
 }
