@@ -7,7 +7,6 @@ export default class Ride {
     public readonly earliestStart: number;
     public readonly latestFinish: number;
 
-    public isSet: boolean = false;
     public isFinished: boolean = false;
 
     constructor(id: number, ...rideDescription: string[]);

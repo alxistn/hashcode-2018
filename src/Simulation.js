@@ -16,7 +16,8 @@ var Ride_1 = __importDefault(require("./Ride"));
 var CarState_1 = __importDefault(require("./CarState"));
 var Simulation = /** @class */ (function () {
     function Simulation(fileName) {
-        this.rides = []; // the list of rides for the simulation
+        this.currentStep = 0;
+        this.availableRides = [];
         this.cars = [];
         this.fileName = fileName;
         var fileContent = fs.readFileSync("./input/" + this.fileName + ".in", "utf-8");
@@ -27,38 +28,45 @@ var Simulation = /** @class */ (function () {
         this.totalVehicles = parseInt(metaSimulation[2], 10);
         this.totalRides = parseInt(metaSimulation[3], 10);
         this.bonus = parseInt(metaSimulation[4], 10);
-        this.steps = parseInt(metaSimulation[5], 10);
+        this.maximumSteps = parseInt(metaSimulation[5], 10);
         for (var i = 0; i < this.totalVehicles; i++) {
             this.cars.push(new Car_1.default(i));
         }
     }
     Simulation.prototype.generateRides = function () {
-        for (var i = 1, l = this.data.length; i < l; i++) {
-            var tmp = this.data[i].split(" ");
-            if (tmp.length === 6) {
-                this.rides.push(new (Ride_1.default.bind.apply(Ride_1.default, [void 0, i - 1].concat(tmp)))());
+        for (var i = 1, l = this.data.length; i < l; ++i) {
+            var rideDescription = this.data[i].split(" ");
+            if (rideDescription.length === 6) {
+                this.availableRides.push(new (Ride_1.default.bind.apply(Ride_1.default, [void 0, i - 1].concat(rideDescription)))());
             }
         }
     };
-    Simulation.prototype.setRides = function (step) {
-        for (var i = this.rides.length - 1; i >= 0; i--) {
-            if (this.rides[i].latestFinish < step) {
-                break;
-            }
-            var filteredCars = this.cars.filter(function (c) { return c.state === CarState_1.default.FREE; });
+    Simulation.prototype.setRides = function () {
+        var filteredCars = this.cars.filter(function (c) { return c.state === CarState_1.default.FREE; });
+        if (!filteredCars.length) {
+            return;
+        }
+        for (var i = this.availableRides.length - 1; i >= 0; --i) {
+            var ride = this.availableRides[i];
             var bestCar = null;
-            for (var _i = 0, filteredCars_1 = filteredCars; _i < filteredCars_1.length; _i++) {
-                var filteredCar = filteredCars_1[_i];
-                filteredCar.distance = filteredCar.position.distance(this.rides[i].startPosition);
+            var bestCarIndex = 0;
+            for (var j = 0, l = filteredCars.length; j < l; ++j) {
+                var filteredCar = filteredCars[j];
+                filteredCar.distance = filteredCar.position.distance(ride.startPosition);
                 if (bestCar === null || filteredCar.distance < bestCar.distance) {
                     bestCar = filteredCar;
+                    bestCarIndex = j;
                 }
             }
             if (bestCar) {
-                bestCar.setRide(this.rides[i]);
-                this.rides.splice(i, 1);
+                bestCar.setRide(ride);
+                this.availableRides.splice(i, 1);
+                filteredCars.splice(bestCarIndex, 1);
             }
             else {
+                break;
+            }
+            if (!filteredCars.length) {
                 break;
             }
         }
@@ -72,12 +80,13 @@ var Simulation = /** @class */ (function () {
         fs.writeFileSync("output/" + this.fileName + ".ou", file);
     };
     Simulation.prototype.start = function () {
-        for (var step = 0; step < this.steps; ++step) {
-            this.setRides(step);
+        while (this.currentStep < this.maximumSteps) {
+            this.setRides();
             for (var _i = 0, _a = this.cars; _i < _a.length; _i++) {
                 var car = _a[_i];
-                car.nextStep(step);
+                car.nextStep(this.currentStep);
             }
+            this.currentStep++;
         }
     };
     return Simulation;

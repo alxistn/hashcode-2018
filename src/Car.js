@@ -10,6 +10,7 @@ var Car = /** @class */ (function () {
         this.distance = 0;
         this._state = CarState_1.default.FREE;
         this._rides = [];
+        this._currentRide = null;
         this.id = id;
         this._position = new Point_1.default();
     }
@@ -49,7 +50,7 @@ var Car = /** @class */ (function () {
             var destinationPoint = void 0;
             // CAR IS WAITING, CHECK IF IT CAN RIDE
             if (this._state === CarState_1.default.WAITING && currentStep >= this.currentRide.earliestStart) {
-                this._state = CarState_1.default.GOING_TO_DEPARTURE;
+                this._state = CarState_1.default.GOING_TO_ARRIVAL;
             }
             if (this._state !== CarState_1.default.WAITING) {
                 // FIND DESTINATION
@@ -89,10 +90,11 @@ var Car = /** @class */ (function () {
     };
     Car.prototype.summarize = function () {
         var ridesOrder = "";
-        this._rides.filter(function (x) { return x.isFinished; }).map(function (x) {
-            ridesOrder += (x.id + " ");
+        var finishedRides = this._rides.filter(function (ride) { return ride.isFinished; });
+        finishedRides.map(function (ride) {
+            ridesOrder += (ride.id + " ");
         });
-        return this._rides.length + " " + ridesOrder;
+        return finishedRides.length + " " + ridesOrder;
     };
     return Car;
 }());

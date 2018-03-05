@@ -9,7 +9,7 @@ export default class Car {
     private _state: CarState = CarState.FREE;
     private _position: Point;
     private _rides: Ride[] = [];
-    private _currentRide: Ride;
+    private _currentRide: Ride | null = null;
 
     get state() {
         return this._state;
@@ -44,7 +44,7 @@ export default class Car {
 
             // CAR IS WAITING, CHECK IF IT CAN RIDE
             if (this._state === CarState.WAITING && currentStep >= this.currentRide.earliestStart) {
-                this._state = CarState.GOING_TO_DEPARTURE;
+                this._state = CarState.GOING_TO_ARRIVAL;
             }
 
             if (this._state !== CarState.WAITING) {
@@ -83,9 +83,12 @@ export default class Car {
 
     public summarize() {
         let ridesOrder = "";
-        this._rides.filter((x) => x.isFinished).map((x) => {
-            ridesOrder += (x.id + " ");
+
+        const finishedRides = this._rides.filter((ride) => ride.isFinished);
+        finishedRides.map((ride) => {
+            ridesOrder += (ride.id + " ");
         });
-        return this._rides.length + " " + ridesOrder;
+
+        return finishedRides.length + " " + ridesOrder;
     }
 }

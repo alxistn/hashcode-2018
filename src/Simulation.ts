@@ -7,15 +7,18 @@ import CarState from "./CarState";
 
 export default class Simulation {
     private fileName: string;
-    private rows: number; // number of rows of the grid
-    private columns: number; // number of columns of the grid
-    private totalVehicles: number; // number of vehicles in the fleet
-    private totalRides: number; // number of rides
-    private bonus: number; // per-ride bonus
-    private steps: number; // number of steps in the simulation
-    private rides: Ride[] = []; // the list of rides for the simulation
+
+    private rows: number;
+    private columns: number;
+    private totalVehicles: number;
+    private totalRides: number;
+    private bonus: number;
+    private maximumSteps: number;
+
+    private currentStep: number = 0;
+    private availableRides: Ride[] = [];
     private cars: Car[] = [];
-    private data: string[];  // the data input formatted
+    private data: string[];
 
     constructor(fileName: string) {
         this.fileName = fileName;
@@ -30,7 +33,7 @@ export default class Simulation {
         this.totalVehicles = parseInt(metaSimulation[2], 10);
         this.totalRides = parseInt(metaSimulation[3], 10);
         this.bonus = parseInt(metaSimulation[4], 10);
-        this.steps = parseInt(metaSimulation[5], 10);
+        this.maximumSteps = parseInt(metaSimulation[5], 10);
 
         for (let i = 0; i < this.totalVehicles; i++) {
             this.cars.push(new Car(i));
@@ -38,33 +41,44 @@ export default class Simulation {
     }
 
     public generateRides() {
-        for (let i = 1, l = this.data.length; i < l; i++) {
-            const tmp = this.data[i].split(" ");
+        for (let i = 1, l = this.data.length; i < l; ++i) {
+            const rideDescription = this.data[i].split(" ");
 
-            if (tmp.length === 6) {
-                this.rides.push(new Ride(i - 1, ...tmp));
+            if (rideDescription.length === 6) {
+                this.availableRides.push(new Ride(i - 1, ...rideDescription));
             }
         }
     }
 
-    public setRides(step: number) {
-        for (let i = this.rides.length - 1; i >= 0; i--) {
-            if (this.rides[i].latestFinish < step) {
+    public setRides() {
+        const filteredCars: Car[] = this.cars.filter((c) => c.state === CarState.FREE);
+        if (!filteredCars.length) {
+            return;
+        }
+
+        for (let i = this.availableRides.length - 1; i >= 0; --i) {
+            const ride = this.availableRides[i];
+            let bestCar: Car | null = null;
+            let bestCarIndex: number = 0;
+
+            for (let j = 0, l = filteredCars.length ; j < l ; ++j) {
+                const filteredCar = filteredCars[j];
+                filteredCar.distance = filteredCar.position.distance(ride.startPosition);
+                if (bestCar === null || filteredCar.distance < bestCar.distance) {
+                    bestCar = filteredCar;
+                    bestCarIndex = j;
+                }
+            }
+
+            if (bestCar) {
+                bestCar.setRide(ride);
+                this.availableRides.splice(i, 1);
+                filteredCars.splice(bestCarIndex, 1);
+            } else {
                 break;
             }
 
-            const filteredCars = this.cars.filter((c) => c.state === CarState.FREE);
-            let bestCar: Car | null = null;
-            for (const filteredCar of filteredCars) {
-                filteredCar.distance = filteredCar.position.distance(this.rides[i].startPosition);
-                if (bestCar === null || filteredCar.distance < bestCar.distance) {
-                    bestCar = filteredCar;
-                }
-            }
-            if (bestCar) {
-                bestCar.setRide(this.rides[i]);
-                this.rides.splice(i, 1);
-            } else {
+            if (!filteredCars.length) {
                 break;
             }
         }
@@ -80,11 +94,12 @@ export default class Simulation {
     }
 
     public start() {
-        for (let step = 0; step < this.steps; ++step) {
-            this.setRides(step);
+        while (this.currentStep < this.maximumSteps) {
+            this.setRides();
             for (const car of this.cars) {
-                car.nextStep(step);
+                car.nextStep(this.currentStep);
             }
+            this.currentStep++;
         }
     }
 }
