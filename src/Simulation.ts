@@ -61,6 +61,11 @@ export default class Simulation {
             let bestCar: Car | null = null;
             let bestCarIndex: number = 0;
 
+            if (this.currentStep >= ride.latestFinish) {
+                this.availableRides.splice(i, 1);
+                continue;
+            }
+
             for (let j = 0, l = filteredCars.length ; j < l ; ++j) {
                 const filteredCar = filteredCars[j];
                 filteredCar.distance = filteredCar.position.distance(ride.startPosition);

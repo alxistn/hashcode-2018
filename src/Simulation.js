@@ -50,6 +50,10 @@ var Simulation = /** @class */ (function () {
             var ride = this.availableRides[i];
             var bestCar = null;
             var bestCarIndex = 0;
+            if (this.currentStep >= ride.latestFinish) {
+                this.availableRides.splice(i, 1);
+                continue;
+            }
             for (var j = 0, l = filteredCars.length; j < l; ++j) {
                 var filteredCar = filteredCars[j];
                 filteredCar.distance = filteredCar.position.distance(ride.startPosition);
