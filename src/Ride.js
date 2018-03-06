@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Point_1 = __importDefault(require("./Point"));
 var Ride = /** @class */ (function () {
     function Ride(id, startRow, startColumn, endRow, endColumn, earliestStart, latestFinish) {
-        this.isFinished = false;
         this.id = id;
         this.startPosition = new Point_1.default(parseInt(startColumn, 10), parseInt(startRow, 10));
         this.endPosition = new Point_1.default(parseInt(endColumn, 10), parseInt(endRow, 10));

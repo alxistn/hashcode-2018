@@ -75,7 +75,6 @@ var Car = /** @class */ (function () {
                 }
                 if (this._position.isEqual(destinationPoint)) {
                     if (this._state === CarState_1.default.GOING_TO_ARRIVAL) {
-                        this._currentRide.isFinished = true;
                         this._state = CarState_1.default.FREE;
                     }
                     else if (this._state === CarState_1.default.GOING_TO_DEPARTURE) {
@@ -87,11 +86,10 @@ var Car = /** @class */ (function () {
     };
     Car.prototype.summarize = function () {
         var ridesOrder = "";
-        var finishedRides = this._rides.filter(function (ride) { return ride.isFinished; });
-        finishedRides.map(function (ride) {
+        this._rides.map(function (ride) {
             ridesOrder += (ride.id + " ");
         });
-        return finishedRides.length + " " + ridesOrder;
+        return this._rides.length + " " + ridesOrder;
     };
     Car.prototype.findBestRide = function (availableRides) {
         var bestRide = availableRides[0];

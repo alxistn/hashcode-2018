@@ -7,8 +7,6 @@ export default class Ride {
     public readonly earliestStart: number;
     public readonly latestFinish: number;
 
-    public isFinished: boolean = false;
-
     constructor(id: number, ...rideDescription: string[]);
     constructor(id: number, startRow: string, startColumn: string,
                 endRow: string, endColumn: string, earliestStart: string, latestFinish: string) {
