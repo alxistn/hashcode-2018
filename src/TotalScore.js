@@ -14,6 +14,9 @@ var TotalScore = /** @class */ (function () {
             total: 47254994,
         };
     }
+    TotalScore.reset = function () {
+        this._instance = new this();
+    };
     Object.defineProperty(TotalScore, "Instance", {
         get: function () {
             return this._instance || (this._instance = new this());
@@ -45,7 +48,7 @@ var TotalScore = /** @class */ (function () {
     };
     TotalScore.prototype.printTotalScore = function () {
         var recordScore = this._actualRecord.total;
-        console.log("\x1b[36m%s\x1b[0m", "-----------------------------------------------------");
+        console.log("\x1b[36m%s\x1b[0m", "----------------------------------------------------");
         console.log("\x1b[34m%s\x1b[0m", "Total score : " + this._totalScore);
         if (this._totalScore > recordScore) {
             console.log("\x1b[32m%s\x1b[0m", "New record !");
@@ -56,7 +59,7 @@ var TotalScore = /** @class */ (function () {
         else {
             console.log("\x1b[33m%s\x1b[0m", "Equalized record");
         }
-        console.log("\x1b[36m%s\x1b[0m", "-----------------------------------------------------");
+        console.log("\x1b[36m%s\x1b[0m", "----------------------------------------------------");
     };
     TotalScore.prototype.printScore = function () {
         for (var fileName in this._filesScores) {
@@ -69,7 +72,7 @@ var TotalScore = /** @class */ (function () {
         this.printTotalScore();
     };
     TotalScore.prototype.printFileScore = function (currentFileScore, recordScore) {
-        console.log("\x1b[36m%s\x1b[0m", "-----------------------------------------------------");
+        console.log("\x1b[36m%s\x1b[0m", "----------------------------------------------------");
         console.log("\x1b[34m%s\x1b[0m", this._currentFile + " score : " + currentFileScore);
         if (currentFileScore > recordScore) {
             console.log("\x1b[32m%s\x1b[0m", "New record !");
@@ -80,7 +83,7 @@ var TotalScore = /** @class */ (function () {
         else {
             console.log("\x1b[33m%s\x1b[0m", "Equalized record");
         }
-        console.log("\x1b[36m%s\x1b[0m", "-----------------------------------------------------");
+        console.log("\x1b[36m%s\x1b[0m", "----------------------------------------------------");
     };
     return TotalScore;
 }());

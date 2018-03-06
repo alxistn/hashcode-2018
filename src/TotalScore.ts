@@ -1,7 +1,11 @@
-import Car from "./Car";
+import AbstractCar from "./AbstractCar";
 import Ride from "./Ride";
 
 export default class TotalScore {
+    public static reset() {
+        this._instance = new this();
+    }
+
     private static _instance: TotalScore;
 
     private _actualRecord: {[key: string]: number};
@@ -24,7 +28,7 @@ export default class TotalScore {
         return this._instance || (this._instance = new this());
     }
 
-    public addRide(ride: Ride, car: Car) {
+    public addRide(ride: Ride, car: AbstractCar) {
         if (this._currentFile) {
             if (!this._filesScores[this._currentFile]) {
                 this._filesScores[this._currentFile] = 0;
@@ -56,7 +60,7 @@ export default class TotalScore {
     public printTotalScore() {
         const recordScore = this._actualRecord.total;
 
-        console.log("\x1b[36m%s\x1b[0m", "-----------------------------------------------------");
+        console.log("\x1b[36m%s\x1b[0m", "----------------------------------------------------");
         console.log("\x1b[34m%s\x1b[0m", `Total score : ${this._totalScore}`);
         if (this._totalScore > recordScore) {
             console.log("\x1b[32m%s\x1b[0m", "New record !");
@@ -65,7 +69,7 @@ export default class TotalScore {
         } else {
             console.log("\x1b[33m%s\x1b[0m", "Equalized record");
         }
-        console.log("\x1b[36m%s\x1b[0m", "-----------------------------------------------------");
+        console.log("\x1b[36m%s\x1b[0m", "----------------------------------------------------");
     }
 
     public printScore() {
@@ -81,7 +85,7 @@ export default class TotalScore {
     }
 
     private printFileScore(currentFileScore: number, recordScore: number) {
-        console.log("\x1b[36m%s\x1b[0m", "-----------------------------------------------------");
+        console.log("\x1b[36m%s\x1b[0m", "----------------------------------------------------");
         console.log("\x1b[34m%s\x1b[0m", `${this._currentFile} score : ${currentFileScore}`);
         if (currentFileScore > recordScore) {
             console.log("\x1b[32m%s\x1b[0m", "New record !");
@@ -90,6 +94,6 @@ export default class TotalScore {
         } else {
             console.log("\x1b[33m%s\x1b[0m", "Equalized record");
         }
-        console.log("\x1b[36m%s\x1b[0m", "-----------------------------------------------------");
+        console.log("\x1b[36m%s\x1b[0m", "----------------------------------------------------");
     }
 }

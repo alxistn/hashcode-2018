@@ -1,9 +1,9 @@
 import * as fs from "fs";
 
-import Car from "./Car";
-import Ride from "./Ride";
+import Ride from "../Ride";
+import SimulationCar from "./SimulationCar";
 
-export default class RideBatch {
+export default class SimulationAlgorithm {
     private _fileName: string;
 
     private _rows: number;
@@ -13,8 +13,9 @@ export default class RideBatch {
     private _bonus: number;
     private _maximumSteps: number;
 
+    private _currentStep: number = 0;
     private _availableRides: Ride[] = [];
-    private _cars: Car[] = [];
+    private _cars: SimulationCar[] = [];
     private _data: string[];
 
     constructor(fileName: string) {
@@ -36,17 +37,19 @@ export default class RideBatch {
         this.generateRides();
     }
 
-    public output() {
-        let file = "";
-        for (const car of this._cars) {
-            file += car.summarize(this._availableRides) + "\n";
+    public start() {
+        while (this._currentStep < this._maximumSteps) {
+            for (const car of this._cars) {
+                car.nextStep(this._currentStep, this._availableRides);
+            }
+            this._currentStep++;
         }
-        fs.writeFileSync(`output/${this._fileName}.ou`, file);
+        this.output();
     }
 
     private generateCars() {
         for (let i = 0; i < this._totalVehicles; i++) {
-            this._cars.push(new Car(i, this._bonus));
+            this._cars.push(new SimulationCar(i, this._bonus));
         }
     }
 
@@ -58,5 +61,14 @@ export default class RideBatch {
                 this._availableRides.push(new Ride(i - 1, ...rideDescription));
             }
         }
+    }
+
+    private output() {
+        let file = "";
+        for (const car of this._cars) {
+            file += car.summarize() + "\n";
+        }
+
+        fs.writeFileSync(`output/${this._fileName}.ou`, file);
     }
 }
