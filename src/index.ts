@@ -12,4 +12,4 @@ for (const fileName of fileNames) {
     totalScore.printCurrentFileScore();
 }
 
-totalScore.printScore();
+totalScore.printTotalScore();

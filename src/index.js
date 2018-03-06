@@ -14,4 +14,4 @@ for (var _i = 0, fileNames_1 = fileNames; _i < fileNames_1.length; _i++) {
     simulation.start();
     totalScore.printCurrentFileScore();
 }
-totalScore.printScore();
+totalScore.printTotalScore();
