@@ -8,19 +8,18 @@ You will find the problem statement of the hashcode 2018 qualification round in 
 
 ### Algorithms
 #### Simulation Algorithm
-The branch "simulation-algorithm" contains the first algorithm tried for this project.<br/>
-This algorithm simulate a situation where vehicules are searching for a new ride everytime they finish the past one.<br/>
-It contains a simulation loop which is updating the position of the vehicules at every step.<br/>
-It scored 47,254,994.<br/>
+The Simulation Algorithm is the first algorithm tried for this project.<br/>
+This algorithm simulate a situation where vehicles are searching for a new ride everytime they finish the past one.<br/>
+It contains a simulation loop which is updating the position of the vehicles at every step.<br/>
+It scored 47,289,281.<br/>
 Score detail:
 - a_example: 10
-- b_should_be_easy: 154,759
+- b_should_be_easy: 176,820
 - c_no_hurry: 15,791,787
-- d_metropolis: 10,142,889
-- e_high_bonus: 21,165,549
+- d_metropolis: 9,859,875
+- e_high_bonus: 21,460,789
 
 #### Prediction Algorithm
-The branch "prediction-algorithm" contains the prediction algorithm<br/>
 In this algorithm, every vehicle tries to find the best rides to take to make the maximum amount of point.<br/>
 The problem with this algorithm is that the first vehicle will take the most rides it can take and the vehicles at the end might have no ride to take.<br/>
 It is far from being the best.

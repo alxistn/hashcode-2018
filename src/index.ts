@@ -13,6 +13,7 @@ let totalScore = TotalScore.Instance;
 for (const fileName of fileNames) {
     totalScore.setFile(fileName);
     const simulationAlgorithm = new SimulationAlgorithm(fileName);
+    simulationAlgorithm.init();
     simulationAlgorithm.start();
     totalScore.printCurrentFileScore();
 }
@@ -29,6 +30,7 @@ totalScore = TotalScore.Instance;
 for (const fileName of fileNames) {
     totalScore.setFile(fileName);
     const predictionAlgorithm = new PredictionAlgorithm(fileName);
+    predictionAlgorithm.init();
     predictionAlgorithm.output();
     totalScore.printCurrentFileScore();
 }

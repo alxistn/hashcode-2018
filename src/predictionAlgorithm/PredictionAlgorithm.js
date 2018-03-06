@@ -1,4 +1,14 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -11,24 +21,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 var fs = __importStar(require("fs"));
-var Ride_1 = __importDefault(require("../Ride"));
+var AbstractAlgorithm_1 = __importDefault(require("../AbstractAlgorithm"));
 var PredictionCar_1 = __importDefault(require("./PredictionCar"));
-var PredictionAlgorithm = /** @class */ (function () {
-    function PredictionAlgorithm(fileName) {
-        this._availableRides = [];
-        this._cars = [];
-        this._fileName = fileName;
-        var fileContent = fs.readFileSync("./input/" + this._fileName + ".in", "utf-8");
-        this._data = fileContent.split("\n");
-        var metaSimulation = this._data[0].split(" ");
-        this._rows = parseInt(metaSimulation[0], 10);
-        this._columns = parseInt(metaSimulation[1], 10);
-        this._totalVehicles = parseInt(metaSimulation[2], 10);
-        this._totalRides = parseInt(metaSimulation[3], 10);
-        this._bonus = parseInt(metaSimulation[4], 10);
-        this._maximumSteps = parseInt(metaSimulation[5], 10);
-        this.generateCars();
-        this.generateRides();
+var PredictionAlgorithm = /** @class */ (function (_super) {
+    __extends(PredictionAlgorithm, _super);
+    function PredictionAlgorithm() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this._cars = [];
+        return _this;
     }
     PredictionAlgorithm.prototype.output = function () {
         var file = "";
@@ -43,14 +43,6 @@ var PredictionAlgorithm = /** @class */ (function () {
             this._cars.push(new PredictionCar_1.default(i, this._bonus));
         }
     };
-    PredictionAlgorithm.prototype.generateRides = function () {
-        for (var i = 1, l = this._data.length; i < l; ++i) {
-            var rideDescription = this._data[i].split(" ");
-            if (rideDescription.length === 6) {
-                this._availableRides.push(new (Ride_1.default.bind.apply(Ride_1.default, [void 0, i - 1].concat(rideDescription)))());
-            }
-        }
-    };
     return PredictionAlgorithm;
-}());
+}(AbstractAlgorithm_1.default));
 exports.default = PredictionAlgorithm;

@@ -15,6 +15,7 @@ for (var _i = 0, fileNames_1 = fileNames; _i < fileNames_1.length; _i++) {
     var fileName = fileNames_1[_i];
     totalScore.setFile(fileName);
     var simulationAlgorithm = new SimulationAlgorithm_1.default(fileName);
+    simulationAlgorithm.init();
     simulationAlgorithm.start();
     totalScore.printCurrentFileScore();
 }
@@ -28,6 +29,7 @@ for (var _a = 0, fileNames_2 = fileNames; _a < fileNames_2.length; _a++) {
     var fileName = fileNames_2[_a];
     totalScore.setFile(fileName);
     var predictionAlgorithm = new PredictionAlgorithm_1.default(fileName);
+    predictionAlgorithm.init();
     predictionAlgorithm.output();
     totalScore.printCurrentFileScore();
 }

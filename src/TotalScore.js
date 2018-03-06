@@ -7,11 +7,11 @@ var TotalScore = /** @class */ (function () {
         this._totalScore = 0;
         this._actualRecord = {
             a_example: 10,
-            b_should_be_easy: 173377,
+            b_should_be_easy: 176820,
             c_no_hurry: 15791787,
             d_metropolis: 10142889,
-            e_high_bonus: 21214975,
-            total: 47254994,
+            e_high_bonus: 21460789,
+            total: 47289281,
         };
     }
     TotalScore.reset = function () {
