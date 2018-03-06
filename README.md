@@ -19,5 +19,18 @@ Score detail:
 - d_metropolis: 10,142,889
 - e_high_bonus: 21,165,549
 
+#### Prediction Algorithm
+The branch "prediction-algorithm" contains the prediction algorithm<br/>
+In this algorithm, every vehicle tries to find the best rides to take to make the maximum amount of point.<br/>
+The problem with this algorithm is that the first vehicle will take the most rides it can take and the vehicles at the end might have no ride to take.<br/>
+It is far from being the best.
+It scored 37,123,238
+Score detail:
+- a_example: 10
+- b_should_be_easy: 173,377
+- c_no_hurry: 9,070,534
+- d_metropolis: 6,664,342
+- e_high_bonus: 21,214,975
+
 ### How to run the simulation
 npm install && npm start
