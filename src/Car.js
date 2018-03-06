@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var CarState_1 = __importDefault(require("./CarState"));
 var Point_1 = __importDefault(require("./Point"));
+var TotalScore_1 = __importDefault(require("./TotalScore"));
 var Car = /** @class */ (function () {
     function Car(id, rideBonus) {
         this._currentStep = 0;
@@ -14,7 +15,29 @@ var Car = /** @class */ (function () {
         this.id = id;
         this._rideBonus = rideBonus;
         this._position = new Point_1.default();
+        this._totalScore = TotalScore_1.default.Instance;
     }
+    Object.defineProperty(Car.prototype, "position", {
+        get: function () {
+            return this._position;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Car.prototype, "currentStep", {
+        get: function () {
+            return this._currentStep;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Car.prototype, "rideBonus", {
+        get: function () {
+            return this._rideBonus;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Car.prototype.nextStep = function (currentStep, availableRides) {
         this._currentStep = currentStep;
         if (this._state === CarState_1.default.FREE) {
@@ -94,6 +117,7 @@ var Car = /** @class */ (function () {
         }
     };
     Car.prototype.setRide = function (ride) {
+        this._totalScore.addRide(ride, this);
         this._rides.push(ride);
         this._currentRide = ride;
         if (this._position.isEqual(ride.startPosition)) {

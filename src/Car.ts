@@ -1,6 +1,7 @@
 import CarState from "./CarState";
 import Point from "./Point";
 import Ride from "./Ride";
+import TotalScore from "./TotalScore";
 
 export default class Car {
     public readonly id: number;
@@ -12,11 +13,25 @@ export default class Car {
     private _position: Point;
     private _rides: Ride[] = [];
     private _currentRide: Ride | null = null;
+    private _totalScore: TotalScore;
 
     constructor(id: number, rideBonus: number) {
         this.id = id;
         this._rideBonus = rideBonus;
         this._position = new Point();
+        this._totalScore = TotalScore.Instance;
+    }
+
+    public get position() {
+        return this._position;
+    }
+
+    public get currentStep() {
+        return this._currentStep;
+    }
+
+    public get rideBonus() {
+        return this._rideBonus;
     }
 
     public nextStep(currentStep: number, availableRides: Ride[]) {
@@ -108,6 +123,8 @@ export default class Car {
     }
 
     private setRide(ride: Ride) {
+        this._totalScore.addRide(ride, this);
+
         this._rides.push(ride);
         this._currentRide = ride;
         if (this._position.isEqual(ride.startPosition)) {
