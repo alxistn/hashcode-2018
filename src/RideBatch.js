@@ -13,9 +13,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var fs = __importStar(require("fs"));
 var Car_1 = __importDefault(require("./Car"));
 var Ride_1 = __importDefault(require("./Ride"));
-var Simulation = /** @class */ (function () {
-    function Simulation(fileName) {
-        this._currentStep = 0;
+var RideBatch = /** @class */ (function () {
+    function RideBatch(fileName) {
         this._availableRides = [];
         this._cars = [];
         this._fileName = fileName;
@@ -31,22 +30,20 @@ var Simulation = /** @class */ (function () {
         this.generateCars();
         this.generateRides();
     }
-    Simulation.prototype.start = function () {
-        while (this._currentStep < this._maximumSteps) {
-            for (var _i = 0, _a = this._cars; _i < _a.length; _i++) {
-                var car = _a[_i];
-                car.nextStep(this._currentStep, this._availableRides);
-            }
-            this._currentStep++;
+    RideBatch.prototype.output = function () {
+        var file = "";
+        for (var _i = 0, _a = this._cars; _i < _a.length; _i++) {
+            var car = _a[_i];
+            file += car.summarize(this._availableRides) + "\n";
         }
-        this.output();
+        fs.writeFileSync("output/" + this._fileName + ".ou", file);
     };
-    Simulation.prototype.generateCars = function () {
+    RideBatch.prototype.generateCars = function () {
         for (var i = 0; i < this._totalVehicles; i++) {
             this._cars.push(new Car_1.default(i, this._bonus));
         }
     };
-    Simulation.prototype.generateRides = function () {
+    RideBatch.prototype.generateRides = function () {
         for (var i = 1, l = this._data.length; i < l; ++i) {
             var rideDescription = this._data[i].split(" ");
             if (rideDescription.length === 6) {
@@ -54,14 +51,6 @@ var Simulation = /** @class */ (function () {
             }
         }
     };
-    Simulation.prototype.output = function () {
-        var file = "";
-        for (var _i = 0, _a = this._cars; _i < _a.length; _i++) {
-            var car = _a[_i];
-            file += car.summarize() + "\n";
-        }
-        fs.writeFileSync("output/" + this._fileName + ".ou", file);
-    };
-    return Simulation;
+    return RideBatch;
 }());
-exports.default = Simulation;
+exports.default = RideBatch;

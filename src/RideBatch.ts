@@ -3,7 +3,7 @@ import * as fs from "fs";
 import Car from "./Car";
 import Ride from "./Ride";
 
-export default class Simulation {
+export default class RideBatch {
     private _fileName: string;
 
     private _rows: number;
@@ -13,7 +13,6 @@ export default class Simulation {
     private _bonus: number;
     private _maximumSteps: number;
 
-    private _currentStep: number = 0;
     private _availableRides: Ride[] = [];
     private _cars: Car[] = [];
     private _data: string[];
@@ -37,14 +36,12 @@ export default class Simulation {
         this.generateRides();
     }
 
-    public start() {
-        while (this._currentStep < this._maximumSteps) {
-            for (const car of this._cars) {
-                car.nextStep(this._currentStep, this._availableRides);
-            }
-            this._currentStep++;
+    public output() {
+        let file = "";
+        for (const car of this._cars) {
+            file += car.summarize(this._availableRides) + "\n";
         }
-        this.output();
+        fs.writeFileSync(`output/${this._fileName}.ou`, file);
     }
 
     private generateCars() {
@@ -61,14 +58,5 @@ export default class Simulation {
                 this._availableRides.push(new Ride(i - 1, ...rideDescription));
             }
         }
-    }
-
-    private output() {
-        let file = "";
-        for (const car of this._cars) {
-            file += car.summarize() + "\n";
-        }
-
-        fs.writeFileSync(`output/${this._fileName}.ou`, file);
     }
 }
